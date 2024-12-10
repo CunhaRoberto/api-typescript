@@ -8,14 +8,10 @@ router.get('/', (_, res) => {
     res.send('Olá, Dev!');
   });
   
-// router.post('/user', (req, res) => {
-//     res.status(StatusCodes.BAD_REQUEST).json(req.body);
-//   });
 
-router.route('/cidades').post(
-  CidadesController.createBodyValidation, 
-  CidadesController.createQueryValidation, 
-  CidadesController.create)
+router.route('/cidades').post(CidadesController.createValidation,CidadesController.create)
+//router.route('/cidades').get(CidadesController.getAllValidation,CidadesController.getAll)
+
 
 
 
