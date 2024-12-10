@@ -12,7 +12,11 @@ router.get('/', (_, res) => {
 //     res.status(StatusCodes.BAD_REQUEST).json(req.body);
 //   });
 
-router.route('/cidades').post(CidadesController.create)
+router.route('/cidades').post(
+  CidadesController.createBodyValidation, 
+  CidadesController.createQueryValidation, 
+  CidadesController.create)
+
 
 
 export { router };
