@@ -5,8 +5,7 @@ import { validation } from '../../shared/middleware';
 
 
 interface ICidade {
-  nome: string;
-  estado: string;
+  nome: string;  
 }
 interface IFilter {
   filter?: string;
@@ -14,11 +13,10 @@ interface IFilter {
 export const createValidation = validation((getSchema) => ({
   body: getSchema<ICidade>(yup.object().shape({
     nome: yup.string().required().min(3),
-    estado: yup.string().required().min(3),
-  })),
+  }).noUnknown(true, "Campos adicionais não são permitidos")),
   query: getSchema<IFilter>(yup.object().shape({
-    filter: yup.string().required().min(3),
-  })),
+    filter: yup.string().optional().min(3),  
+  })),  
 }));
 
 export const create = async (req: Request<{}, {}, ICidade>, res: Response) => {
