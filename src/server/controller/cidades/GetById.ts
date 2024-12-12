@@ -19,6 +19,27 @@ export const getByIdValidation = validation((getSchema) => ({
 }));
 
 export const getById = async (req: Request<IParamsProps>, res: Response) => {
-    console.log(req.params);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Get by id não implementado!');
+  const id = req.params.id  
+  console.log(req.params);
+
+    if(req.params.id && req.params.id > 1000) {
+      res.status(StatusCodes.NOT_FOUND).json({
+        errors:{
+          default:'Registro não encontrado!'
+        }
+    });
+
+    } else{
+      res.status(StatusCodes.OK).json([
+        {
+        id: req.params.id,
+        nome: req.body.nome
+      }]);
+
+      console.log({
+        id: id,
+        nome: req.body.nome
+      })
+
+    }
 };
