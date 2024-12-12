@@ -3,5 +3,6 @@ package-lock.json
 .env
 .vscode
 .log
-build
-coverage
+/build
+/coverage
+*.sqlite
