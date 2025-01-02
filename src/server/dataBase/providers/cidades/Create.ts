@@ -17,6 +17,7 @@ export const create = async (cidade: Omit<ICidade, 'id'>): Promise<number | Erro
       return new Error('Erro ao realizar o cadastro');
     } catch (error) {
       console.error('Erro ao realizar o cadastro da cidade:', error);
+      
       return new Error('Erro ao realizar o cadastro. Por favor, tente novamente mais tarde.');
     }
   };
