@@ -1,4 +1,4 @@
-import knex from "knex";
+import {Knex} from "../../knex";
 import { ICidade } from "../../models";
 import { ETableNames } from "../../ETableNames";
 
@@ -7,14 +7,14 @@ import { ETableNames } from "../../ETableNames";
 
 export const create = async (cidade: Omit<ICidade, 'id'>): Promise<number | Error> => {
     try {
-      const id = await knex(ETableNames.cidade).insert(cidade);
+      const [result] = await Knex(ETableNames.cidade).insert(cidade).returning('id');
   
-      // O SQLite retorna o último ID como um número direto
-      if (id && typeof id[0] === 'number') {
-        return id[0];
-      }
+      if( typeof result === 'object') return result.id    
+
+      if(typeof result === 'number') return result
   
       return new Error('Erro ao realizar o cadastro');
+      
     } catch (error) {
       console.error('Erro ao realizar o cadastro da cidade:', error);
       

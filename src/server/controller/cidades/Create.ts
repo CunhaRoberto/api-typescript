@@ -18,11 +18,7 @@ export const createValidation = validation((getSchema) => ({
 
 
 export const create = async (req: Request<{}, {}, IBodyProps>, res: Response) => {
-  console.log(req.body);
-  
   const result = await CidadesProvider.create(req.body)
-  
-
 
   if(result instanceof Error){
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -32,5 +28,5 @@ export const create = async (req: Request<{}, {}, IBodyProps>, res: Response) =>
     })
   }
 
-  res.status(StatusCodes.CREATED).json(result);
+  res.status(StatusCodes.CREATED).json(`Cadastrado com sucesso! id: ${ result}`);
 };
