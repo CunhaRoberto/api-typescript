@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import * as yup from 'yup';
 
+import { CidadesProvider } from '../../dataBase/providers/cidades';
 import { validation } from '../../shared/middleware';
 
 
@@ -18,23 +19,29 @@ export const deleteByIdValidation = validation((getSchema) => ({
    
 }));
 
-export const deleteById = async (req: Request<IParamsProps>, res: Response) => {
-    console.log(req.params);
-    if(req.params.id && req.params.id > 1000) {
-      res.status(StatusCodes.NOT_FOUND).json({
-        errors:{
-          default:'Registro não encontrado!'
-        }
+export const deleteById = async (req: Request<IParamsProps>, res: Response) => { 
+  
+  const {id} = req.params
+
+  if(!id) {
+    res.status(StatusCodes.BAD_REQUEST).json({
+      errors:{
+        default:'Informe o id do registro!'
+      }
     });
+  } 
 
-    } else{
-      res.status(StatusCodes.OK).json({
-        message:{
-          default:'Registro removido com sucesso!'
-        }
-      });
+  const result = await CidadesProvider.deleteById(Number(id))
 
-      console.log('Registro removido com sucesso!');
-      //res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Delete não implementado!');
-    }
-};
+  if(result instanceof Error){
+    console.log(result.message)
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      errors:{
+        default: result  
+      }
+    });
+  }
+
+    res.status(StatusCodes.OK).json('Registro excluido com sucesso!');
+    
+}
