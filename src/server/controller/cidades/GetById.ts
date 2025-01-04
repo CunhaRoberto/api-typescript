@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import * as yup from 'yup';
 
+import { CidadesProvider } from '../../dataBase/providers/cidades';
 import { validation } from '../../shared/middleware';
 
 
@@ -19,27 +20,28 @@ export const getByIdValidation = validation((getSchema) => ({
 }));
 
 export const getById = async (req: Request<IParamsProps>, res: Response) => {
-  const id = req.params.id  
-  console.log(req.params);
-
-    if(req.params.id && req.params.id > 1000) {
-      res.status(StatusCodes.NOT_FOUND).json({
+   const {id} = req.params
+  
+    if(!id) {
+      res.status(StatusCodes.BAD_REQUEST).json({
         errors:{
-          default:'Registro não encontrado!'
+          default:'Informe o id do registro!'
         }
-    });
-
-    } else{
-      res.status(StatusCodes.OK).json([
-        {
-        id: req.params.id,
-        nome: req.body.nome
-      }]);
-
-      console.log({
-        id: id,
-        nome: req.body.nome
-      })
-
+      });
+    } 
+  
+    const result = await CidadesProvider.getById(Number(id))
+  
+    if(result instanceof Error){
+      console.log(result.message)
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        errors:{
+          default: result  
+        }
+      });
     }
+  
+      res.status(StatusCodes.OK).json(result);
+
+    
 };
