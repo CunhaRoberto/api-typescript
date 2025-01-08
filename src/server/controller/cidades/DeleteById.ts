@@ -52,11 +52,12 @@ export const deleteById = async (req: Request<IParamsProps>, res: Response) => {
     console.error(error); 
     
     if (error instanceof Error) {
-      return res.status(statusCode).json({
+      res.status(statusCode).json({
         message,
         statusCode
       })
     } 
+    return 
  }
   
 }
