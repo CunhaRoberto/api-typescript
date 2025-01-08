@@ -1,10 +1,11 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import * as yup from 'yup';
 
 import { CidadesProvider } from '../../dataBase/providers/cidades';
 import { validation } from '../../shared/middleware';
+import DataNotFoundException from '../../../core/exceptions/DataNotFoundException';
 
 
 interface IParamsProps {
@@ -20,28 +21,42 @@ export const deleteByIdValidation = validation((getSchema) => ({
 }));
 
 export const deleteById = async (req: Request<IParamsProps>, res: Response) => { 
+  try{
+
+    const {id} = req.params
+
+    if(!id) {
+      res.status(StatusCodes.BAD_REQUEST).json({
+        errors:{
+          default:'Informe o id do registro!'
+        }
+      });
+    } 
   
-  const {id} = req.params
+    const result = await CidadesProvider.deleteById(Number(id))
+  
 
-  if(!id) {
-    res.status(StatusCodes.BAD_REQUEST).json({
-      errors:{
-        default:'Informe o id do registro!'
-      }
+    if (typeof result === 'number' && result < 1) {
+      throw new DataNotFoundException('Registro não encontrado!');
+    }
+  
+     res.status(StatusCodes.OK).json({
+      message:'Registro excluido com sucesso!',
+      statusCode: StatusCodes.OK
     });
-  } 
-
-  const result = await CidadesProvider.deleteById(Number(id))
-
-  if(result instanceof Error){
-    console.log(result.message)
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      errors:{
-        default: result  
-      }
-    });
-  }
-
-    res.status(StatusCodes.OK).json('Registro excluido com sucesso!');
     
+  } catch (error:any) {
+
+    const statusCode = error._httpCode
+    const message = error.message
+    console.error(error); 
+    
+    if (error instanceof Error) {
+      return res.status(statusCode).json({
+        message,
+        statusCode
+      })
+    } 
+ }
+  
 }

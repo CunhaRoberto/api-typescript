@@ -1,22 +1,18 @@
 import {Knex} from "../../knex";
 import { ETableNames } from "../../ETableNames";
+import InternalServerErrorException from "../../../../core/exceptions/InternalServerErrorException";
 
-
-// 
-
-export const deleteById = async (id: number): Promise<void | Error> => {
+export const deleteById = async (id: number): Promise< number > => {
     try {
       const result = await Knex(ETableNames.cidade)
       .where('id', '=', id)
       .del();
   
-      if( result > 0) return    
-
-      return new Error('Erro ao excluir o registro');
+      return result
       
     } catch (error) {
       console.error(error);      
-      return new Error('Erro ao excluir o registro. Por favor, tente novamente mais tarde.');
+      throw new InternalServerErrorException('Erro ao inesperado ao excluir o registro. Por favor, tente novamente mais tarde.');
     }
   };
   
