@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import * as yup from 'yup';
@@ -6,6 +6,7 @@ import * as yup from 'yup';
 import { CidadesProvider } from '../../dataBase/providers/cidades';
 import { validation } from '../../shared/middleware';
 import DataNotFoundException from '../../../core/exceptions/DataNotFoundException';
+import { DeleteCidadeUseCase } from '../../useCases/cidades/DeleteById';
 
 
 interface IParamsProps {
@@ -23,27 +24,17 @@ export const deleteByIdValidation = validation((getSchema) => ({
 export const deleteById = async (req: Request<IParamsProps>, res: Response) => { 
   try{
 
-    const {id} = req.params
+    const {id} = req.params   
+  
+    const deleteCidadeUseCase = new DeleteCidadeUseCase();
+    await deleteCidadeUseCase.delete(Number(id)); 
 
-    if(!id) {
-      res.status(StatusCodes.BAD_REQUEST).json({
-        errors:{
-          default:'Informe o id do registro!'
-        }
-      });
-    } 
-  
-    const result = await CidadesProvider.deleteById(Number(id))
-  
-
-    if (typeof result === 'number' && result < 1) {
-      throw new DataNotFoundException('Registro não encontrado!');
-    }
-  
-     res.status(StatusCodes.OK).json({
+    res.status(StatusCodes.OK).json({
       message:'Registro excluido com sucesso!',
       statusCode: StatusCodes.OK
     });
+    
+    
     
   } catch (error:any) {
 
