@@ -9,12 +9,16 @@ export async function up(knex: Knex){
         table.bigIncrements('id').primary().index()
         table.string('nomeCompleto').index().notNullable()
         table.string('email').index().notNullable()
-        table.bigInteger('cidadeId')
+        table
+            .bigInteger('cidadeId')
             .index()
             .notNullable()
             .references('id')
             .inTable(ETableNames.cidade)
-        table.comment('Tabelas usadas para armazenar cidades do sistema')
+            .onUpdate('CASCADE')
+            .onDelete('RESTRICT')
+
+        table.comment('Tabelas usadas para armazenar pessoas do sistema')
     })
     .then(()=>{
         console.log(`# Created table ${ETableNames.pessoa}`)
