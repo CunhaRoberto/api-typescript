@@ -1,4 +1,3 @@
-import knex from "knex"
 import { Knex } from "./server/dataBase/knex"
 import { server } from "./server/Server"
 

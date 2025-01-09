@@ -20,9 +20,10 @@ router.route('/cidades/:id').put(CidadesController.updateByIdValidation,CidadesC
 router.route('/cidades/:id').delete(CidadesController.deleteByIdValidation,CidadesController.deleteById)
 
 
-router.use((req, res) => {
-  res.status(404).json({ message: 'A URL solicitada não corresponde a nenhuma rota registrada no servidor.' });
-});
-
+router.all('*', (request, response) => {
+  response.status(400).json({
+    message: 'Whoops, wrong way.'
+  })
+})
 
 export { router };
