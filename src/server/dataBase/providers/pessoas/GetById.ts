@@ -4,7 +4,7 @@ import{ IPessoa} from "../../models"
 import InternalServerErrorException from "../../../../core/exceptions/InternalServerErrorException";
 
 
-export const getById = async (id: number): Promise<IPessoa> => {
+export const getById = async (id: number): Promise<IPessoa | undefined> => {
     try {
       const result = await Knex(ETableNames.pessoa)
       .select('*')

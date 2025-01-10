@@ -1,11 +1,10 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { validation } from '../../shared/middleware';
+import { GetByIdCidadeUseCase  } from '../../useCases/cidades/GetById';
+
 
 import * as yup from 'yup';
-
-import { CidadesProvider } from '../../dataBase/providers/cidades';
-import { validation } from '../../shared/middleware';
-
 
 interface IParamsProps {
   id?: number;  
@@ -20,28 +19,32 @@ export const getByIdValidation = validation((getSchema) => ({
 }));
 
 export const getById = async (req: Request<IParamsProps>, res: Response) => {
-   const {id} = req.params
-  
-    if(!id) {
-      res.status(StatusCodes.BAD_REQUEST).json({
-        errors:{
-          default:'Informe o id do registro!'
-        }
-      });
+try{
+
+  const {id} = req.params    
+  const getByIdCidadeUseCase = new GetByIdCidadeUseCase();
+  const result = await getByIdCidadeUseCase.getById(Number(id)); 
+  res.status(StatusCodes.OK).json( result);   
+    
+    
+  } catch (error:any) {
+
+    const statusCode = error._httpCode
+    const message = error.message
+    console.error(error); 
+    
+    if (error instanceof Error) {
+      res.status(statusCode).json({
+        message,
+        statusCode
+      })
     } 
+    return 
+ }
   
-    const result = await CidadesProvider.getById(Number(id))
-  
-    if(result instanceof Error){
-      console.log(result.message)
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        errors:{
-          default: result  
-        }
-      });
-    }
-  
-      res.status(StatusCodes.OK).json(result);
+}
+
 
     
-};
+
+    
