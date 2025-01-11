@@ -4,8 +4,6 @@ import { ETableNames } from "../../ETableNames";
 import InternalServerErrorException from "../../../../core/exceptions/InternalServerErrorException";
 
 
-// 
-
 export const create = async (pessoa: Omit<IPessoa, 'id'>): Promise< number > => {
   try {
 

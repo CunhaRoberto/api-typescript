@@ -26,7 +26,7 @@ export const create = async (req: Request<{}, {}, IBodyProps>, res: Response) =>
     const params: IBodyProps = {...req.body }
     const createPessoaUseCase = new CreatePessoaUseCase();
     const result = await createPessoaUseCase.create(params); 
-    res.status(StatusCodes.OK).json({
+    res.status(StatusCodes.CREATED).json({
       message: 'Pessoa cadastrada com sucesso!',
       id: result
     })

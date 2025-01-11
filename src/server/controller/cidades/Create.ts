@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { validation } from '../../shared/middleware';
 import { StatusCodes } from 'http-status-codes';
 import { ICidade } from '../../dataBase/models';
-import { CidadesProvider } from '../../dataBase/providers/cidades';
+import { CreateCidadeUseCase } from '../../useCases/cidades/Create';
 
 
 
@@ -18,15 +18,28 @@ export const createValidation = validation((getSchema) => ({
 
 
 export const create = async (req: Request<{}, {}, IBodyProps>, res: Response) => {
-  const result = await CidadesProvider.create(req.body)
-
-  if(result instanceof Error){
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      errors:{
-        default: result.message
-      }
+  try{
+  
+    const params: IBodyProps = {...req.body }
+    const createPessoaUseCase = new CreateCidadeUseCase();
+    const result = await createPessoaUseCase.create(params); 
+    res.status(StatusCodes.CREATED).json({
+      message: 'Cidade cadastrada com sucesso!',
+      id: result
     })
-  }
-
-  res.status(StatusCodes.CREATED).json(`Cadastrado com sucesso! id: ${ result}`);
+      
+    } catch (error:any) {
+  
+      const statusCode = error._httpCode
+      const message = error.message
+      console.error(error); 
+      
+      if (error instanceof Error) {
+        res.status(statusCode).json({
+          message,
+          statusCode
+        })
+      } 
+      return 
+    }
 };
