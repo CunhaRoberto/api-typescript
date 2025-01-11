@@ -5,6 +5,7 @@ import { validation } from '../../shared/middleware';
 import { StatusCodes } from 'http-status-codes';
 import { IPessoa } from '../../dataBase/models';
 import { PessoasProvider } from '../../dataBase/providers/pessoas';
+import { CreatePessoaUseCase } from '../../useCases/pessoas/Create';
 
 
 
@@ -20,15 +21,28 @@ export const createValidation = validation((getSchema) => ({
 
 
 export const create = async (req: Request<{}, {}, IBodyProps>, res: Response) => {
-  const result = await PessoasProvider.create(req.body)
-
-  if(result instanceof Error){
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      errors:{
-        default: result.message
-      }
+  try{
+  
+    const params: IBodyProps = {...req.body }
+    const createPessoaUseCase = new CreatePessoaUseCase();
+    const result = await createPessoaUseCase.create(params); 
+    res.status(StatusCodes.OK).json({
+      message: 'Pessoa cadastrada com sucesso!',
+      id: result
     })
-  }
-
-  res.status(StatusCodes.CREATED).json(`Cadastrado com sucesso! id: ${ result}`);
+      
+    } catch (error:any) {
+  
+      const statusCode = error._httpCode
+      const message = error.message
+      console.error(error); 
+      
+      if (error instanceof Error) {
+        res.status(statusCode).json({
+          message,
+          statusCode
+        })
+      } 
+      return 
+   }
 };

@@ -6,19 +6,12 @@ import InternalServerErrorException from "../../../../core/exceptions/InternalSe
 
 // 
 
-export const create = async (pessoa: Omit<IPessoa, 'id'>): Promise<number | Error> => {
+export const create = async (pessoa: Omit<IPessoa, 'id'>): Promise< number > => {
   try {
 
-    // consultar se a cidade existe em arquivo de use case
-
-
     const [result] = await Knex(ETableNames.pessoa).insert(pessoa).returning('id');
-  
-    if( typeof result === 'object') return result.id    
-
-    if(typeof result === 'number') return result
-  
-    return new Error('Erro ao realizar o cadastro');
+    const res = (typeof result === 'object' ? result.id : result)   
+    return res    
     
   } catch (error) {
     console.error(error); 
