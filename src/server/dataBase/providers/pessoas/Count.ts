@@ -2,15 +2,25 @@ import InternalServerErrorException from '../../../../core/exceptions/InternalSe
 import {ETableNames} from '../../ETableNames'
 import { Knex} from '../../knex'
 
-export const getAll = async( filter: string): Promise< number > => {
+export const count = async( filter: string | undefined): Promise< number > => {
     try{
-        const [{count}] = await Knex(ETableNames.pessoa)
-            .where ('nomeCompleto', 'like', `%${filter}%`)
-            .count<[{count: number}]>('* as count')
+        let query = Knex(ETableNames.pessoa)
+        .select('*')
+        .count<[{count: number}]>('* as count')
+        
+        if (filter && filter.trim() !== '') {
+            query = query.where('nomeCompleto', 'like', `%${filter}%`);
+          }
+
+        const [{count}] = await query
 
          
         return Number(count)
         
+
+
+
+        const result = await query;
         
     }catch(error){
         console.error(error);      

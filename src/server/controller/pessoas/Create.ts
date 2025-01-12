@@ -13,7 +13,7 @@ interface IBodyProps extends Omit<IPessoa, 'id'> {}
 
 export const createValidation = validation((getSchema) => ({
   body: getSchema<IBodyProps>(yup.object().shape({
-    email: yup.string().required().email(),
+    email: yup.string().required().email().lowercase(),
     cidadeId: yup.number().integer().required(),
     nomeCompleto: yup.string().required().min(3),
   }).noUnknown(true, "Campos adicionais não são permitidos"))
