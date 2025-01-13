@@ -4,6 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup';
 import { validation } from '../../shared/middleware';
 import { ICidade } from '../../dataBase/models';
+import { UpateByIdCidadesUseCase } from '../../useCases/cidades/UpdateById';
 
 
 interface IParamsProps {
@@ -25,20 +26,28 @@ export const updateByIdValidation = validation((getSchema) => ({
 }));
 
 export const updateById = async (req: Request<IParamsProps, {}, IBodyProps>, res: Response) => {
-    console.log(req.params, req.body);
-    if(req.params.id && req.params.id > 1000) {
-      res.status(StatusCodes.NOT_FOUND).json({
-        errors:{
-          default:'Registro não encontrado!'
-        }
-    });
+  try{
+    
+    const body : IBodyProps = {...req.body }
+    const {id} = req.params
+    const updateCidadeUseCase = new UpateByIdCidadesUseCase();
+    const result = await updateCidadeUseCase.update( Number(id), body); 
+    res.status(StatusCodes.OK).json({
+      message: 'Alteração realizada com sucesso!'            
+    })
+        
+  } catch (error:any) {
 
-    } else{
-      res.status(StatusCodes.OK).json({
-        message:{
-          default:'Dados atualizados Com sucesso!'
-        }
-      });
-   
-    }
-};
+    const statusCode = error._httpCode
+    const message = error.message
+    console.error(error); 
+    
+    if (error instanceof Error) {
+      res.status(statusCode).json({
+        message,
+        statusCode
+      })
+    } 
+    return 
+  }
+}
