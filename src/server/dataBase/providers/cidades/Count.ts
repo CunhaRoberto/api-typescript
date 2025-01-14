@@ -11,16 +11,8 @@ export const count = async( filter: string | undefined): Promise< number > => {
         if (filter && filter.trim() !== '') {
             query = query.where('nome', 'like', `%${filter}%`);
           }
-
-        const [{count}] = await query
-
-         
-        return Number(count)
-        
-
-
-
-        const result = await query;
+        const [{count}] = await query         
+        return Number(count)           
         
     }catch(error){
         console.error(error);      

@@ -24,7 +24,7 @@ router.route('/Pessoas').post(PessoasController.createValidation,PessoasControll
 router.route('/Pessoas/:id').get(PessoasController.getByIdValidation,PessoasController.getById)
 router.route('/Pessoas').get(PessoasController.getAllValidation,PessoasController.getAll)
 router.route('/Pessoas/:id').put(PessoasController.updateByIdValidation,PessoasController.updateById)
-// router.route('/Pessoas/:id').delete(PessoasController.deleteByIdValidation,PessoasController.deleteById)
+router.route('/Pessoas/:id').delete(PessoasController.deleteByIdValidation,PessoasController.deleteById)
 
 
 router.all('*', (request, response) => {

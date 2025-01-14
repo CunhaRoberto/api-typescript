@@ -26,8 +26,8 @@ export const getAll = async (req: Request<{}, {}, {}, IQueryProps>, res: Respons
  try{
  
    const params : IQueryProps  = req.query    
-   const getByIdPessoaUseCase = new GetAllPessoasUseCase();
-   const result = await getByIdPessoaUseCase.getAll(params); 
+   const getAllPessoaUseCase = new GetAllPessoasUseCase();
+   const result = await getAllPessoaUseCase.getAll(params); 
    res.status(StatusCodes.OK).json( result);   
      
      

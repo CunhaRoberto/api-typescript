@@ -11,17 +11,9 @@ export const count = async( filter: string | undefined): Promise< number > => {
         if (filter && filter.trim() !== '') {
             query = query.where('nomeCompleto', 'like', `%${filter}%`);
           }
-
-        const [{count}] = await query
-
+        const [{count}] = await query         
+        return Number(count)   
          
-        return Number(count)
-        
-
-
-
-        const result = await query;
-        
     }catch(error){
         console.error(error);      
         throw new InternalServerErrorException('Erro ao inesperado consultar o total de registros. Por favor, tente novamente mais tarde.');

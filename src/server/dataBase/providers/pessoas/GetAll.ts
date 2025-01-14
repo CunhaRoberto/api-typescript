@@ -6,8 +6,7 @@ import InternalServerErrorException from '../../../../core/exceptions/InternalSe
 export const getAll = async( page: number, limit: number, filter: string |undefined ): Promise< IPessoa[]> => {
     try{
         let query = Knex(ETableNames.pessoa)
-        .select('*')
-        // .where ('nomeCompleto', 'like', `%${filter}%`)
+        .select('*')        
         .offset((page-1) * limit)
         .limit(limit)
 
@@ -15,8 +14,7 @@ export const getAll = async( page: number, limit: number, filter: string |undefi
             query = query.whereRaw('LOWER(nomeCompleto) LIKE LOWER(?)', [`%${filter}%`]);
           }
 
-        const result = await query;
-        
+        const result = await query;        
         return result
 
     }catch(error){
