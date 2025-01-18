@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "start": "ts-node-dev ./src/index.ts",
+    "test": "jest",    
+    "start": "node build/index.js",
+    "dev": "ts-node-dev ./src/index.ts",
     "knex:migrate": "npx knex --knexfile ./src/server/database/knex/Environment.ts migrate:latest",
     "knex:rollback": "npx knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollback",
     "knex:rollback-all": "npx knex --knexfile ./src/server/database/knex/Environment.ts migrate:rolback-all",
